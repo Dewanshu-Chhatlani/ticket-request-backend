@@ -49,21 +49,27 @@ module Searchable
       page = args[:page].present? ? args[:page].to_i : 1
       per_page = args[:per_page].present? ? args[:per_page].to_i : 10
 
-      params = {
+      search_definition = {
         from: ((page-1) * per_page),
         size: per_page,
         sort: [],
-        query: query
+        query: query,
+        track_total_hits: true
       }
 
       if args[:sort_by]
         sort_hash = {}
         sort_by = "#{args[:sort_by]}.keyword"
         sort_hash[sort_by] = { order: args[:sort_order] || 'asc'}
-        params[:sort] << sort_hash
+        search_definition[:sort] << sort_hash
       end
 
-      self.__elasticsearch__.search(params).records.to_a
+      search_results = self.__elasticsearch__.search(search_definition)
+      total_count = search_results.response['hits']['total']['value']
+
+      records = search_results.records.to_a
+
+      {records: records, total_count: total_count}
     end
   end
 end
