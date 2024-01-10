@@ -1,7 +1,7 @@
 class Ticket < ApplicationRecord
   include Searchable
 
-  STATUSES = [:open, :in_progress, :closed].freeze
+  STATUSES = [:open, :in_progress, :resolved, :closed].freeze
 
   validates :title, presence: true
   validates :description, presence: true
