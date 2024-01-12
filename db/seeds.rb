@@ -1,6 +1,6 @@
-user1 = User.create(first_name: 'Admin', email: 'admin@request_app.com', password: 'admin', admin: true)
-user2 = User.create(first_name: 'Test', email: 'test@request_app.com', password: 'helloworld', admin: false)
-user3 = User.create(first_name: 'Dewanshu', email: 'dewanshu@request_app.com', password: 'helloworld', admin: false)
+user1 = User.create(first_name: 'Admin', email: 'admin@requestapp.com', password: 'admin', admin: true)
+user2 = User.create(first_name: 'Test', email: 'test@requestapp.com', password: 'helloworld', admin: false)
+user3 = User.create(first_name: 'Dewanshu', email: 'dewanshu@requestapp.com', password: 'helloworld', admin: false)
 
 
 30.times do

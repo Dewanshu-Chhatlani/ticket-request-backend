@@ -13,6 +13,7 @@ module Searchable
       indexes :description, type: 'text' do
         indexes :keyword, type: 'keyword'
       end
+      indexes :created_at, type: 'date'
     end
 
     def self.search(args, user_id=nil)
@@ -59,7 +60,13 @@ module Searchable
 
       if args[:sort_by]
         sort_hash = {}
-        sort_by = "#{args[:sort_by]}.keyword"
+
+        if args[:sort_by] == "created_at"
+          sort_by = args[:sort_by]
+        else
+          sort_by = "#{args[:sort_by]}.keyword"
+        end
+
         sort_hash[sort_by] = { order: args[:sort_order] || 'asc'}
         search_definition[:sort] << sort_hash
       end
