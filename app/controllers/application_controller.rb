@@ -1,11 +1,15 @@
 class ApplicationController < ActionController::API
   before_action :authenticate
 
-  def authenticate
-    render json: {error: 'Unable to authenticate!'}, status: :unauthorized if logged_in_user.blank?
+  rescue_from CanCan::AccessDenied do |exception|
+    render json: {error: exception.message}, status: :unauthorized
   end
 
-  def logged_in_user
+  def authenticate
+    render json: {error: 'Unable to authenticate!'}, status: :unauthorized if current_user.blank?
+  end
+
+  def current_user
     if decoded_token
       user_id = decoded_token[0]['user_id']
       @user = User.find(user_id)

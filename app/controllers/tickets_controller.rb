@@ -1,11 +1,12 @@
 class TicketsController < ApplicationController
+  load_and_authorize_resource
   before_action :set_ticket, only: [:update, :clone, :destroy]
 
   def index
-    if logged_in_user.admin
+    if current_user.admin?
       tickets = Ticket.search(search_params)
     else
-      tickets = Ticket.search(search_params, logged_in_user.id)
+      tickets = Ticket.search(search_params, current_user.id)
     end
 
     render json: tickets
@@ -13,7 +14,7 @@ class TicketsController < ApplicationController
 
   def create
     ticket = Ticket.new(ticket_params)
-    ticket.user = logged_in_user
+    ticket.user = current_user
 
     if ticket.save
       render json: ticket, status: :created
@@ -31,9 +32,9 @@ class TicketsController < ApplicationController
   end
 
   def clone
-    if logged_in_user.admin
+    if current_user.admin?
       ticket = @ticket.dup
-      ticket.user = logged_in_user
+      ticket.user = current_user
 
       if ticket.save
         render json: ticket, status: :created
@@ -62,10 +63,6 @@ class TicketsController < ApplicationController
   end
 
   def set_ticket
-    if logged_in_user.admin
-      @ticket = Ticket.find(params[:id])
-    else
-      @ticket = logged_in_user.tickets.find(params[:id])
-    end
+    @ticket = Ticket.find(params[:id])
   end
 end
